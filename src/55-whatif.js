@@ -242,18 +242,16 @@ class WhatIfModal extends Modal {
     this.sims = new Map(st.scenarios.map((x) => [x.id, wiSimulate(data, this.pet.id, this.insScope, x, this.hz)]));
     if (st.selected !== 'base' && !this.current()) st.selected = 'base';
 
-    // top bar
+    // 1. estimate disclaimer, first row
+    c.append(h('div', { class: 'pd-wi-predict', role: 'note' }, icon('alert-triangle'), h('div', {}, h('strong', { text: 'Estimate, not a guarantee. ' }),
+      'Results use your policy terms as recorded and simple claim maths (deductible, then the reimbursement rate, up to the limit). Your insurer makes the real decisions. Not financial advice.')));
+    // 2. what is being evaluated, right under the disclaimer
+    if (this.base.pol) c.append(this.viewBar());
+    // 3. sandbox note + figures as of, PDF, help
     const top = h('div', { class: 'pd-wi-top' });
     top.append(h('div', { class: 'pd-wi-sandbox' }, h('span', { class: 'pd-wi-sandbox-icon' }, icon('flask-conical')),
       h('span', { text: 'Sandbox — nothing here changes your pets’ records or insurance. Scenarios are saved so you can come back to them.' })));
     const acts = h('div', { class: 'pd-wi-top-actions' });
-    const shared = sharedPolicies(data, this.pet);
-    if (shared.length) {
-      const v = h('select', { class: 'dropdown', 'aria-label': 'View' }, shared.map((p) => h('option', { value: p.id, text: `Whole plan: ${policyLabel(p)}` })), h('option', { value: 'pet', text: `${petLabel(this.pet)}’s share` }));
-      v.value = this.base.ctx.kind === 'plan' ? this.base.ctx.policy.id : 'pet';
-      v.addEventListener('change', () => { this.insScope = v.value; this.render(); });
-      acts.append(h('label', { class: 'pd-wi-ctl' }, h('span', { text: 'View' }), v));
-    }
     const hz = h('select', { class: 'dropdown', 'aria-label': 'Figures as of' }, WI_HORIZONS.map(([k, l]) => h('option', { value: k, text: l })));
     hz.value = st.horizon; hz.addEventListener('change', async () => { st.horizon = hz.value; await this.persist(); });
     acts.append(h('label', { class: 'pd-wi-ctl' }, h('span', { text: 'Figures as of' }), hz));
@@ -261,9 +259,6 @@ class WhatIfModal extends Modal {
     acts.append(btn('', () => new InsuranceHelpModal(this.app, this.plugin).open(), { icon: 'help-circle', cls: 'pd-icon-btn pd-wi-help', title: 'How pet insurance and these figures work' }));
     top.append(acts);
     c.append(top);
-    c.append(h('div', { class: 'pd-wi-predict', role: 'note' }, icon('alert-triangle'), h('div', {}, h('strong', { text: 'Estimate, not a guarantee. ' }),
-      'Results use your policy terms as recorded and simple claim maths (deductible, then the reimbursement rate, up to the limit). Your insurer makes the real decisions. Not financial advice.')));
-
     if (!this.base.pol) {
       c.append(h('div', { class: 'pd-welcome' }, h('h3', { text: 'Add a policy first' }), h('p', { text: `The planner tests changes against an insurance policy. Add ${petLabel(this.pet)}’s policy on the Insurance tab, then come back.` })));
       return;
@@ -274,6 +269,34 @@ class WhatIfModal extends Modal {
     main.scrollTop = scroll;
   }
 
+  viewBar() {
+    const data = this.data, ctx = this.base.ctx, pet = this.pet, shared = sharedPolicies(data, pet);
+    if (!shared.length) {
+      const pol = this.base.pol;
+      return h('div', { class: 'pd-wi-view is-compact', role: 'note', title: `Counts ${petLabel(pet)}’s vet bills and claims against the premium.` },
+        h('span', { class: 'pd-wi-view-label' }, icon('paw-print'), h('span', { text: 'Viewing' })),
+        h('span', { class: 'pd-wi-view-who' }, h('strong', { text: petLabel(pet) }), pol ? ` · ${policyLabel(pol)}` : ''));
+    }
+    const bar = h('div', { class: 'pd-wi-view', role: 'group', 'aria-label': 'What the planner is evaluating' });
+    bar.append(h('div', { class: 'pd-wi-view-label' }, icon(ctx.kind === 'plan' ? 'users' : 'paw-print'), h('span', { text: 'Viewing' })));
+    {
+      const seg = h('div', { class: 'pd-wi-seg', role: 'radiogroup' });
+      const opt = (value, title, sub, active) => {
+        const b = h('button', { type: 'button', class: 'pd-wi-seg-btn' + (active ? ' is-active' : ''), role: 'radio', 'aria-checked': String(active) },
+          h('span', { class: 'pd-wi-seg-title', text: title }), h('span', { class: 'pd-wi-seg-sub', text: sub }));
+        b.addEventListener('click', () => { if (!active) { this.insScope = value; this.render(); } });
+        seg.append(b);
+      };
+      shared.forEach((p) => opt(p.id, 'Whole plan', `${policyLabel(p)} · ${petsOnPolicy(data, p).map(petLabel).join(' + ')}`, ctx.kind === 'plan' && ctx.policy.id === p.id));
+      const pol = currentPolicy(ctx) || shared[0], share = policyShare(data, pol, pet.id);
+      opt('pet', `${petLabel(pet)}’s share`, `${petLabel(pet)} only · ${fmtPct(share)} of the premium`, ctx.kind === 'pet');
+      bar.append(seg);
+    }
+    bar.append(h('div', { class: 'pd-wi-view-hint', text: ctx.kind === 'plan'
+      ? `Counts every covered pet’s vet bills and claims against the full premium. Answers “is this plan worth it for the household?”`
+      : `Counts only ${petLabel(pet)}’s vet bills and claims against ${petLabel(pet)}’s share of the premium.` }));
+    return bar;
+  }
   itemSub(x) { const v = x.st.verdict; return `${v.label} · net ${(x.st.net >= 0 ? '+' : '−') + this.M(Math.abs(x.st.net), true)}`; }
   renderSide(side) {
     const st = this.store;

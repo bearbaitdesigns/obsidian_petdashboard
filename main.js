@@ -1106,7 +1106,7 @@ class DashboardUI {
   get data() { return this.plugin.data; }
   get s() { return this.plugin.data.settings; }
   get pet() { return (this.fixedPetId && this.data.pets.find((p) => p.id === this.fixedPetId)) || this.plugin.activePet(); }
-  async selectPet(id) { this.insScope = null; if (this.fixedPetId) { this.fixedPetId = id; this.render(); } else { this.data.activePetId = id; await this.save(); } }
+  async selectPet(id, scope) { if (scope !== undefined) this.insScope = scope; if (this.fixedPetId) { this.fixedPetId = id; this.render(); } else { this.data.activePetId = id; await this.save(); } }
   get app() { return this.plugin.app; }
   M(n, w) { return fmtMoney(n, this.s.currency, w); }
   D(iso) { return fmtDate(iso, this.s.dateFormat); }
@@ -1118,7 +1118,7 @@ class DashboardUI {
     clear(this.root);
     this.root.classList.add('pd-root');
     const wrap = h('div', { class: 'pd-wrap' });
-    wrap.append(this.header(), this.tabs());
+    wrap.append(this.header(), this.tabs()); const pb = this.petBar(); if (pb) wrap.append(pb);
     const body = h('div', { class: 'pd-body' });
     if (this.tab === 'insurance') this.renderInsurance(body);
     else if (this.tab === 'health') this.renderHealth(body);
@@ -1135,18 +1135,51 @@ class DashboardUI {
     const left = h('div', { class: 'pd-title-wrap' }, this.avatar(pet, 'title'),
       h('h1', { class: 'pd-title', text: dashboardTitle(pet) }),
       btn('', () => this.openTitleModal(), { icon: 'pencil', cls: 'pd-icon-btn', title: 'Rename dashboard' }));
-    const pets = h('div', { class: 'pd-pets', role: 'tablist', 'aria-label': 'Pets' });
-    const archived = this.data.pets.filter(isArchived);
-    const showArch = this.showArchived || isArchived(pet);
-    this.data.pets.filter((p) => !isArchived(p) || showArch).forEach((p) => {
-      const b = btn(petLabel(p), () => this.selectPet(p.id),
-        { cls: 'pd-pet-chip' + (p.id === pet.id ? ' is-active' : '') + (isArchived(p) ? ' is-archived' : ''), title: isArchived(p) ? `${petLabel(p)} (archived)` : `Show ${petLabel(p)}` });
-      const src = this.plugin.photoSrc(p); if (src) b.prepend(h('img', { class: 'pd-chip-photo', src, alt: '' }));
-      pets.append(b);
-    });
+    const pets = h('div', { class: 'pd-pets' });
+    const archived = this.data.pets.filter(isArchived), showArch = this.showArchived || isArchived(pet);
     if (archived.length) pets.append(btn(showArch ? 'Hide archived' : `Archived (${archived.length})`, () => { this.showArchived = !showArch; if (!this.showArchived && isArchived(pet)) { const p = this.data.pets.find((x) => !isArchived(x)); if (p) { this.selectPet(p.id); return; } } this.render(); }, { icon: 'archive', cls: 'pd-pet-add', title: 'Show or hide archived pets' }));
     pets.append(btn('Add pet', () => this.addPet(), { icon: 'plus', cls: 'pd-pet-add' }));
     return h('div', { class: 'pd-header' }, left, pets);
+  }
+  /* pet (and, on Insurance, whole-plan) selector, shown under the tabs when there is more than one pet */
+  petBar() {
+    const data = this.data, pet = this.pet, t = todayISO();
+    if (data.pets.length < 2) return null;
+    const showArch = this.showArchived || isArchived(pet);
+    const ins = this.tab === 'insurance';
+    const row = h('div', { class: 'pd-petbar', role: 'tablist', 'aria-label': ins ? 'Whole plan or one pet' : 'Pet' });
+    const pill = (content, active, onClick, o = {}) => {
+      const b = h('button', { type: 'button', role: 'tab', 'aria-selected': String(active), class: 'pd-petpill' + (active ? ' is-active' : '') + (o.cls ? ' ' + o.cls : ''), title: o.title }, content);
+      b.addEventListener('click', () => { if (!active) onClick(); });
+      row.append(b);
+    };
+    let planId = null;
+    if (ins) {
+      const ctx = defaultInsCtx(data, pet, this.insScope);
+      planId = ctx.kind === 'plan' ? ctx.policy.id : null;
+      const plans = data.policies.filter((p) => petsOnPolicy(data, p).length > 1)
+        .sort((a, b) => Number(activeOn(b, t)) - Number(activeOn(a, t)) || String(b.start).localeCompare(String(a.start)));
+      plans.forEach((p) => {
+        const on = petsOnPolicy(data, p);
+        pill([icon('users'), h('span', { class: 'pd-petpill-text' }, h('span', { class: 'pd-petpill-name', text: plans.length > 1 ? `Whole plan · ${p.provider}` : 'Whole plan' }), h('span', { class: 'pd-petpill-sub', text: on.map(petLabel).join(' + ') }))],
+          planId === p.id,
+          () => { if (p.petIds.includes(pet.id)) { this.insScope = p.id; this.render(); } else this.selectPet(on[0].id, p.id); },
+          { cls: 'is-plan', title: `${policyLabel(p)}: every covered pet’s claims against the full premium` });
+      });
+      if (plans.length) row.append(h('span', { class: 'pd-petbar-sep', 'aria-hidden': 'true' }));
+    }
+    const visible = data.pets.filter((p) => !isArchived(p) || showArch);
+    if (visible.length < 2 && !row.querySelector('.is-plan')) return null;
+    visible.forEach((p) => {
+      const src = this.plugin.photoSrc(p);
+      const shareTxt = ins && sharedPolicies(data, p).length ? 'share' : '';
+      pill([src ? h('img', { class: 'pd-chip-photo', src, alt: '' }) : icon(speciesIcon(p.species)),
+        h('span', { class: 'pd-petpill-text' }, h('span', { class: 'pd-petpill-name', text: petLabel(p) }), shareTxt ? h('span', { class: 'pd-petpill-sub', text: `${petLabel(p)}’s share` }) : null)],
+        p.id === pet.id && !planId,
+        () => this.selectPet(p.id, ins ? 'pet' : undefined),
+        { cls: isArchived(p) ? 'is-archived' : '', title: isArchived(p) ? `${petLabel(p)} (archived)` : ins && shareTxt ? `${petLabel(p)}’s claims against ${petLabel(p)}’s share of the premium` : `Show ${petLabel(p)}` });
+    });
+    return row;
   }
   tabs() {
     const t = h('div', { class: 'pd-tabs', role: 'tablist' });
@@ -1392,10 +1425,6 @@ class DashboardUI {
         btn('', () => new InsuranceHelpModal(this.app, this.plugin).open(), { icon: 'help-circle', cls: 'pd-help-btn', title: 'How this works and settings' }))));
 
     if (shared.length) {
-      const seg = h('div', { class: 'pd-segment', role: 'tablist', 'aria-label': 'What to evaluate' });
-      shared.forEach((p) => seg.append(btn(`Whole plan: ${policyLabel(p)} (${petsOnPolicy(data, p).map(petLabel).join(' + ')})`, () => { this.insScope = p.id; this.render(); }, { cls: isPlan && ctx.policy.id === p.id ? 'is-active' : '' })));
-      seg.append(btn(`${petLabel(pet)}’s share`, () => { this.insScope = 'pet'; this.render(); }, { cls: !isPlan ? 'is-active' : '' }));
-      body.append(seg);
       body.append(h('p', { class: 'pd-muted pd-small', text: isPlan
         ? 'Showing the whole multi-pet policy: every covered pet’s claims against the full premium.'
         : `Showing ${petLabel(pet)}’s part: ${petLabel(pet)}’s claims against ${petLabel(pet)}’s share of each premium (set the split in the policy).` }));
@@ -2232,18 +2261,16 @@ class WhatIfModal extends Modal {
     this.sims = new Map(st.scenarios.map((x) => [x.id, wiSimulate(data, this.pet.id, this.insScope, x, this.hz)]));
     if (st.selected !== 'base' && !this.current()) st.selected = 'base';
 
-    // top bar
+    // 1. estimate disclaimer, first row
+    c.append(h('div', { class: 'pd-wi-predict', role: 'note' }, icon('alert-triangle'), h('div', {}, h('strong', { text: 'Estimate, not a guarantee. ' }),
+      'Results use your policy terms as recorded and simple claim maths (deductible, then the reimbursement rate, up to the limit). Your insurer makes the real decisions. Not financial advice.')));
+    // 2. what is being evaluated, right under the disclaimer
+    if (this.base.pol) c.append(this.viewBar());
+    // 3. sandbox note + figures as of, PDF, help
     const top = h('div', { class: 'pd-wi-top' });
     top.append(h('div', { class: 'pd-wi-sandbox' }, h('span', { class: 'pd-wi-sandbox-icon' }, icon('flask-conical')),
       h('span', { text: 'Sandbox — nothing here changes your pets’ records or insurance. Scenarios are saved so you can come back to them.' })));
     const acts = h('div', { class: 'pd-wi-top-actions' });
-    const shared = sharedPolicies(data, this.pet);
-    if (shared.length) {
-      const v = h('select', { class: 'dropdown', 'aria-label': 'View' }, shared.map((p) => h('option', { value: p.id, text: `Whole plan: ${policyLabel(p)}` })), h('option', { value: 'pet', text: `${petLabel(this.pet)}’s share` }));
-      v.value = this.base.ctx.kind === 'plan' ? this.base.ctx.policy.id : 'pet';
-      v.addEventListener('change', () => { this.insScope = v.value; this.render(); });
-      acts.append(h('label', { class: 'pd-wi-ctl' }, h('span', { text: 'View' }), v));
-    }
     const hz = h('select', { class: 'dropdown', 'aria-label': 'Figures as of' }, WI_HORIZONS.map(([k, l]) => h('option', { value: k, text: l })));
     hz.value = st.horizon; hz.addEventListener('change', async () => { st.horizon = hz.value; await this.persist(); });
     acts.append(h('label', { class: 'pd-wi-ctl' }, h('span', { text: 'Figures as of' }), hz));
@@ -2251,9 +2278,6 @@ class WhatIfModal extends Modal {
     acts.append(btn('', () => new InsuranceHelpModal(this.app, this.plugin).open(), { icon: 'help-circle', cls: 'pd-icon-btn pd-wi-help', title: 'How pet insurance and these figures work' }));
     top.append(acts);
     c.append(top);
-    c.append(h('div', { class: 'pd-wi-predict', role: 'note' }, icon('alert-triangle'), h('div', {}, h('strong', { text: 'Estimate, not a guarantee. ' }),
-      'Results use your policy terms as recorded and simple claim maths (deductible, then the reimbursement rate, up to the limit). Your insurer makes the real decisions. Not financial advice.')));
-
     if (!this.base.pol) {
       c.append(h('div', { class: 'pd-welcome' }, h('h3', { text: 'Add a policy first' }), h('p', { text: `The planner tests changes against an insurance policy. Add ${petLabel(this.pet)}’s policy on the Insurance tab, then come back.` })));
       return;
@@ -2264,6 +2288,34 @@ class WhatIfModal extends Modal {
     main.scrollTop = scroll;
   }
 
+  viewBar() {
+    const data = this.data, ctx = this.base.ctx, pet = this.pet, shared = sharedPolicies(data, pet);
+    if (!shared.length) {
+      const pol = this.base.pol;
+      return h('div', { class: 'pd-wi-view is-compact', role: 'note', title: `Counts ${petLabel(pet)}’s vet bills and claims against the premium.` },
+        h('span', { class: 'pd-wi-view-label' }, icon('paw-print'), h('span', { text: 'Viewing' })),
+        h('span', { class: 'pd-wi-view-who' }, h('strong', { text: petLabel(pet) }), pol ? ` · ${policyLabel(pol)}` : ''));
+    }
+    const bar = h('div', { class: 'pd-wi-view', role: 'group', 'aria-label': 'What the planner is evaluating' });
+    bar.append(h('div', { class: 'pd-wi-view-label' }, icon(ctx.kind === 'plan' ? 'users' : 'paw-print'), h('span', { text: 'Viewing' })));
+    {
+      const seg = h('div', { class: 'pd-wi-seg', role: 'radiogroup' });
+      const opt = (value, title, sub, active) => {
+        const b = h('button', { type: 'button', class: 'pd-wi-seg-btn' + (active ? ' is-active' : ''), role: 'radio', 'aria-checked': String(active) },
+          h('span', { class: 'pd-wi-seg-title', text: title }), h('span', { class: 'pd-wi-seg-sub', text: sub }));
+        b.addEventListener('click', () => { if (!active) { this.insScope = value; this.render(); } });
+        seg.append(b);
+      };
+      shared.forEach((p) => opt(p.id, 'Whole plan', `${policyLabel(p)} · ${petsOnPolicy(data, p).map(petLabel).join(' + ')}`, ctx.kind === 'plan' && ctx.policy.id === p.id));
+      const pol = currentPolicy(ctx) || shared[0], share = policyShare(data, pol, pet.id);
+      opt('pet', `${petLabel(pet)}’s share`, `${petLabel(pet)} only · ${fmtPct(share)} of the premium`, ctx.kind === 'pet');
+      bar.append(seg);
+    }
+    bar.append(h('div', { class: 'pd-wi-view-hint', text: ctx.kind === 'plan'
+      ? `Counts every covered pet’s vet bills and claims against the full premium. Answers “is this plan worth it for the household?”`
+      : `Counts only ${petLabel(pet)}’s vet bills and claims against ${petLabel(pet)}’s share of the premium.` }));
+    return bar;
+  }
   itemSub(x) { const v = x.st.verdict; return `${v.label} · net ${(x.st.net >= 0 ? '+' : '−') + this.M(Math.abs(x.st.net), true)}`; }
   renderSide(side) {
     const st = this.store;
