@@ -1,0 +1,1022 @@
+{
+ "pets": [
+  {
+   "id": "mwd2ns56gv1znu",
+   "name": "Biscuit",
+   "species": "Dog",
+   "breed": "Golden Retriever",
+   "sex": "Male (neutered)",
+   "dob": "2021-06-14",
+   "color": "Golden",
+   "microchip": "985112004567321",
+   "primaryVet": "Maple Street Animal Hospital",
+   "vetPhone": "(555) 201-3344",
+   "vetAddress": "412 Maple Street, Springfield, OR 97477",
+   "emergencyVet": "Riverside Veterinary Emergency",
+   "emergencyPhone": "(555) 388-9100",
+   "emergencyAddress": "88 River Road, Eugene, OR 97401 · open 24/7",
+   "allergies": "Chicken protein (suspected)",
+   "conditions": "Seasonal atopic dermatitis",
+   "titleMode": "pet",
+   "customTitle": "",
+   "photo": "",
+   "archived": false,
+   "archivedDate": "",
+   "archiveReason": "",
+   "archiveNote": "",
+   "visits": [
+    {
+     "id": "mwd2ns56xfg9onpkh",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2025-04-06",
+     "type": "Sick visit",
+     "reason": "Head shaking, smelly right ear",
+     "diagnosis": "Otitis externa (yeast)",
+     "treatment": "Ear cleaning, Osurnia in right ear",
+     "cost": 210,
+     "weight": 68.4
+    },
+    {
+     "id": "mwd2ns56rosjap34u",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2025-06-12",
+     "type": "Wellness / check-up",
+     "reason": "Annual exam and vaccines",
+     "diagnosis": "Healthy",
+     "treatment": "Rabies, DHPP, Lepto, Bordetella",
+     "cost": 310,
+     "weight": 69,
+     "notClaimable": true
+    },
+    {
+     "id": "mwd2ns56w0regpgqu",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2025-09-03",
+     "type": "Sick visit",
+     "reason": "Limping on left hind leg",
+     "diagnosis": "Soft-tissue strain, no fracture on X-ray",
+     "treatment": "Carprofen 14 days, leash rest",
+     "cost": 640,
+     "weight": 69.8,
+     "followUpDate": "2025-10-03"
+    },
+    {
+     "id": "mwd2ns57h2lopbehl",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2025-10-03",
+     "type": "Follow-up",
+     "reason": "Limp recheck",
+     "diagnosis": "Resolved",
+     "cost": 0,
+     "notClaimable": true
+    },
+    {
+     "id": "mwd2ns579n32np0bh",
+     "clinic": "Riverside Veterinary Emergency",
+     "vet": "Dr. Tom Okafor",
+     "date": "2025-12-21",
+     "type": "Emergency",
+     "reason": "Vomiting, not eating — swallowed a sock",
+     "diagnosis": "Intestinal foreign body",
+     "treatment": "Exploratory surgery, sock removed; 2 nights in hospital",
+     "cost": 3850,
+     "weight": 70.6,
+     "followUpDate": "2025-12-28"
+    },
+    {
+     "id": "mwd2ns57v6qyv95kt",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2026-03-09",
+     "type": "Follow-up",
+     "reason": "Incision check, staple removal",
+     "diagnosis": "Healing well",
+     "cost": 95,
+     "weight": 69.2
+    },
+    {
+     "id": "mwd2ns57a5bi5ltyt",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2026-06-14",
+     "type": "Wellness / check-up",
+     "reason": "Annual exam",
+     "diagnosis": "Healthy; slightly itchy paws",
+     "treatment": "Lepto and Bordetella boosters",
+     "cost": 295,
+     "weight": 70.2,
+     "notClaimable": true
+    },
+    {
+     "id": "mwd2ns579gxnhw4w4",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2026-08-18",
+     "type": "Sick visit",
+     "reason": "Itching, licking paws, red belly",
+     "diagnosis": "Atopic dermatitis",
+     "treatment": "Started Apoquel; trial salmon diet for 8 weeks",
+     "cost": 180,
+     "weight": 71,
+     "followUpDate": "2026-11-24"
+    },
+    {
+     "id": "mwd2ns57suvsapyim",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2026-09-08",
+     "type": "Sick visit",
+     "reason": "Hot spot behind left ear",
+     "diagnosis": "Acute moist dermatitis",
+     "treatment": "Clipped and cleaned, topical spray",
+     "cost": 165,
+     "weight": 71.4
+    },
+    {
+     "id": "mwd2ns57tjfx7n0z6",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2026-10-06",
+     "type": "Dental",
+     "reason": "Dental cleaning under anesthesia",
+     "diagnosis": "Mild tartar, no extractions",
+     "cost": 620,
+     "weight": 71.6
+    },
+    {
+     "id": "mwd2ns57vzanodoi9",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2026-11-02",
+     "type": "Sick visit",
+     "reason": "Vomited 3 times overnight",
+     "diagnosis": "Acute gastritis, likely dietary",
+     "treatment": "Cerenia injection, bland diet 3 days",
+     "cost": 240,
+     "weight": 71.2
+    },
+    {
+     "id": "mwd2ns57xpqgoim2c",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2026-11-24",
+     "type": "Follow-up",
+     "reason": "Allergy recheck and diet review"
+    }
+   ],
+   "meds": [
+    {
+     "id": "mwd2ns57ampp2z4al",
+     "name": "NexGard Plus",
+     "dose": "60.1–121 lb",
+     "form": "Chewable",
+     "frequency": "1 chew monthly",
+     "purpose": "Flea, tick and heartworm prevention",
+     "prescriber": "Dr. Priya Raman",
+     "start": "2025-06-12",
+     "refillDue": "2026-11-17"
+    },
+    {
+     "id": "mwd2ns57hufogsutc",
+     "name": "Apoquel",
+     "dose": "16 mg",
+     "form": "Tablet",
+     "frequency": "1 tablet once a day with food",
+     "purpose": "Itching (atopic dermatitis)",
+     "prescriber": "Dr. Priya Raman",
+     "start": "2026-08-18",
+     "refillDue": "2026-12-02"
+    },
+    {
+     "id": "mwd2ns57cvshyzyjx",
+     "name": "Cerenia",
+     "dose": "60 mg",
+     "form": "Tablet",
+     "frequency": "1 tablet once a day, up to 5 days",
+     "purpose": "Vomiting",
+     "prescriber": "Dr. Priya Raman",
+     "start": "2026-11-02",
+     "asNeeded": true
+    },
+    {
+     "id": "mwd2ns57ay750s0ya",
+     "name": "Carprofen",
+     "dose": "75 mg",
+     "form": "Chewable",
+     "frequency": "1 tablet twice a day with food",
+     "purpose": "Leg strain pain",
+     "prescriber": "Dr. Priya Raman",
+     "start": "2025-09-03",
+     "end": "2025-09-17",
+     "whyStopped": "Course finished"
+    },
+    {
+     "id": "mwd2ns57qa4wioi56",
+     "name": "Gabapentin",
+     "dose": "300 mg",
+     "form": "Capsule",
+     "frequency": "1 capsule every 12 hours",
+     "purpose": "Post-surgery pain",
+     "prescriber": "Dr. Tom Okafor",
+     "start": "2025-12-22",
+     "end": "2025-12-29",
+     "whyStopped": "Course finished"
+    }
+   ],
+   "vaccines": [
+    {
+     "id": "mwd2ns57551ki8g0v",
+     "name": "Rabies",
+     "dateGiven": "2025-06-12",
+     "nextDue": "2028-06-12",
+     "clinic": "Maple Street Animal Hospital",
+     "lot": "RB-22871"
+    },
+    {
+     "id": "mwd2ns57f5plke0mz",
+     "name": "DHPP",
+     "dateGiven": "2025-06-12",
+     "nextDue": "2028-06-12",
+     "clinic": "Maple Street Animal Hospital",
+     "lot": "DH-55102"
+    },
+    {
+     "id": "mwd2ns577digpswdq",
+     "name": "Leptospirosis",
+     "dateGiven": "2025-06-12",
+     "nextDue": "2026-06-12",
+     "clinic": "Maple Street Animal Hospital"
+    },
+    {
+     "id": "mwd2ns57ivpeu4bnh",
+     "name": "Leptospirosis",
+     "dateGiven": "2026-06-14",
+     "nextDue": "2027-06-14",
+     "clinic": "Maple Street Animal Hospital",
+     "lot": "LP-90134"
+    },
+    {
+     "id": "mwd2ns576p4sa7jw0",
+     "name": "Bordetella",
+     "dateGiven": "2025-06-12",
+     "nextDue": "2026-06-12",
+     "clinic": "Maple Street Animal Hospital"
+    },
+    {
+     "id": "mwd2ns57xmb6kehpr",
+     "name": "Bordetella",
+     "dateGiven": "2026-06-14",
+     "nextDue": "2027-06-14",
+     "clinic": "Maple Street Animal Hospital",
+     "lot": "BD-77420"
+    },
+    {
+     "id": "mwd2ns57g7fa4tvq7",
+     "name": "Canine influenza",
+     "dateGiven": "2025-10-02",
+     "nextDue": "2026-10-23",
+     "clinic": "Maple Street Animal Hospital",
+     "notes": "Required by the boarding kennel"
+    }
+   ],
+   "weights": [
+    {
+     "id": "mwd2ns572f8kcv0xw",
+     "date": "2025-03-15",
+     "weight": 68.1,
+     "notes": ""
+    },
+    {
+     "id": "mwd2ns57qv0a705ar",
+     "date": "2025-05-15",
+     "weight": 68.6,
+     "notes": ""
+    },
+    {
+     "id": "mwd2ns57m136xn3dp",
+     "date": "2025-07-15",
+     "weight": 69.3,
+     "notes": ""
+    },
+    {
+     "id": "mwd2ns570qqdt6j8r",
+     "date": "2025-11-15",
+     "weight": 70.4,
+     "notes": ""
+    },
+    {
+     "id": "mwd2ns577s2wz2kr8",
+     "date": "2026-01-15",
+     "weight": 68.9,
+     "notes": "After surgery"
+    },
+    {
+     "id": "mwd2ns57gswieg4xk",
+     "date": "2026-04-15",
+     "weight": 69.6,
+     "notes": ""
+    },
+    {
+     "id": "mwd2ns57okixlm6hg",
+     "date": "2026-05-15",
+     "weight": 70,
+     "notes": ""
+    },
+    {
+     "id": "mwd2ns57kifevw31x",
+     "date": "2026-07-15",
+     "weight": 70.5,
+     "notes": ""
+    },
+    {
+     "id": "mwd2ns573ltia12o6",
+     "date": "2025-04-06",
+     "weight": 68.4,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns57ml4v9liek",
+     "date": "2025-06-12",
+     "weight": 69,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns57fpjfs8efe",
+     "date": "2025-09-03",
+     "weight": 69.8,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns57b9rs7ogmw",
+     "date": "2025-12-21",
+     "weight": 70.6,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns57kfa43xq4v",
+     "date": "2026-03-09",
+     "weight": 69.2,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns57ty51f47l7",
+     "date": "2026-06-14",
+     "weight": 70.2,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns5715568pdve",
+     "date": "2026-08-18",
+     "weight": 71,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns57tq8gveh3r",
+     "date": "2026-09-08",
+     "weight": 71.4,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns578eclr5pxw",
+     "date": "2026-10-06",
+     "weight": 71.6,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns57hlei68nqh",
+     "date": "2026-11-02",
+     "weight": 71.2,
+     "notes": "From vet visit"
+    }
+   ],
+   "observations": [
+    {
+     "id": "mwd2ns57lxr1wa98g",
+     "date": "2026-08-10",
+     "category": "Itching",
+     "severity": "2",
+     "note": "Licking front paws a lot in the evening."
+    },
+    {
+     "id": "mwd2ns575szgjl4rl",
+     "date": "2026-08-15",
+     "category": "Skin & coat",
+     "severity": "2",
+     "note": "Red patch on belly."
+    },
+    {
+     "id": "mwd2ns57ek55p8735",
+     "date": "2026-09-06",
+     "category": "Itching",
+     "severity": "3",
+     "note": "Scratching left ear until it bled; hot spot."
+    },
+    {
+     "id": "mwd2ns577k1cra4l2",
+     "date": "2026-10-25",
+     "category": "Itching",
+     "severity": "1",
+     "note": "Much better on Apoquel, occasional paw licking."
+    },
+    {
+     "id": "mwd2ns57cq7d66zzf",
+     "date": "2026-11-01",
+     "category": "Vomiting",
+     "severity": "2",
+     "note": "Vomited yellow foam twice before breakfast."
+    },
+    {
+     "id": "mwd2ns57n4qdc2myp",
+     "date": "2026-11-02",
+     "category": "Appetite",
+     "severity": "2",
+     "note": "Refused breakfast."
+    },
+    {
+     "id": "mwd2ns57iyrzc4krz",
+     "date": "2026-11-08",
+     "category": "Energy",
+     "severity": "1",
+     "note": "Back to normal on walks."
+    }
+   ],
+   "notes": [
+    {
+     "id": "mwd2ns57jk3oyiwef",
+     "date": "2025-12-23",
+     "title": "Sock surgery",
+     "text": "Keep laundry basket lidded. Riverside ER invoice saved in the insurance folder."
+    },
+    {
+     "id": "mwd2ns57ndjlegg4d",
+     "date": "2026-08-18",
+     "title": "Food trial",
+     "text": "Switched to salmon and rice kibble for an 8-week elimination trial. No chicken treats."
+    }
+   ]
+  },
+  {
+   "id": "mwd2ns569qjxcc",
+   "name": "Mochi",
+   "species": "Cat",
+   "breed": "Domestic Shorthair",
+   "sex": "Female (spayed)",
+   "dob": "",
+   "color": "Grey tabby",
+   "microchip": "985112009876543",
+   "primaryVet": "Maple Street Animal Hospital",
+   "vetPhone": "(555) 201-3344",
+   "vetAddress": "412 Maple Street, Springfield, OR 97477",
+   "emergencyVet": "Riverside Veterinary Emergency",
+   "emergencyPhone": "(555) 388-9100",
+   "emergencyAddress": "88 River Road, Eugene, OR 97401 · open 24/7",
+   "allergies": "",
+   "conditions": "",
+   "titleMode": "default",
+   "customTitle": "",
+   "photo": "",
+   "archived": false,
+   "archivedDate": "",
+   "archiveReason": "",
+   "archiveNote": "",
+   "visits": [
+    {
+     "id": "mwd2ns57c38qab3hn",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2024-12-09",
+     "type": "Sick visit",
+     "reason": "Sneezing, watery eyes",
+     "diagnosis": "Upper respiratory infection",
+     "treatment": "Doxycycline 10 days",
+     "cost": 180,
+     "weight": 9.1
+    },
+    {
+     "id": "mwd2ns575e9ddzanc",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2025-07-20",
+     "type": "Wellness / check-up",
+     "reason": "Annual exam and vaccines",
+     "diagnosis": "Healthy",
+     "treatment": "FVRCP, rabies",
+     "cost": 190,
+     "weight": 9.6,
+     "notClaimable": true
+    },
+    {
+     "id": "mwd2ns578kas29wfz",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2026-02-04",
+     "type": "Sick visit",
+     "reason": "Straining in litter box",
+     "diagnosis": "Bacterial cystitis (UTI)",
+     "treatment": "Urine culture; Clavamox 10 days; wet food",
+     "cost": 320,
+     "weight": 10.2,
+     "followUpDate": "2026-03-20"
+    },
+    {
+     "id": "mwd2ns57qzm147laa",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2026-07-22",
+     "type": "Wellness / check-up",
+     "reason": "Annual exam",
+     "diagnosis": "Healthy; gaining a little weight",
+     "treatment": "Cut dry food by a quarter",
+     "cost": 205,
+     "weight": 10.8,
+     "notClaimable": true
+    },
+    {
+     "id": "mwd2ns57apx67yrss",
+     "clinic": "Maple Street Animal Hospital",
+     "vet": "Dr. Priya Raman",
+     "date": "2026-11-06",
+     "type": "Sick visit",
+     "reason": "Vomiting hairballs, eating less",
+     "diagnosis": "Hairball-related gastritis",
+     "treatment": "Laxatone gel, brushing daily",
+     "cost": 150,
+     "weight": 10.5
+    }
+   ],
+   "meds": [
+    {
+     "id": "mwd2ns573a1ykhq3z",
+     "name": "Revolution Plus",
+     "dose": "5.6–11 lb",
+     "form": "Topical",
+     "frequency": "1 tube on the skin monthly",
+     "purpose": "Flea, tick, heartworm and ear mite prevention",
+     "prescriber": "Dr. Priya Raman",
+     "start": "2025-07-20",
+     "refillDue": "2026-12-03"
+    },
+    {
+     "id": "mwd2ns57nr8sz1vy5",
+     "name": "Laxatone",
+     "dose": "",
+     "form": "Other",
+     "frequency": "1 inch of gel 2–3 times a week",
+     "purpose": "Hairballs",
+     "prescriber": "Dr. Priya Raman",
+     "start": "2026-11-06",
+     "asNeeded": true
+    },
+    {
+     "id": "mwd2ns571j0mae9eq",
+     "name": "Clavamox",
+     "dose": "62.5 mg",
+     "form": "Tablet",
+     "frequency": "1 tablet twice a day",
+     "purpose": "Urinary infection",
+     "prescriber": "Dr. Priya Raman",
+     "start": "2026-02-04",
+     "end": "2026-02-14",
+     "whyStopped": "Course finished"
+    },
+    {
+     "id": "mwd2ns57dba4md4qi",
+     "name": "Doxycycline",
+     "dose": "25 mg",
+     "form": "Liquid",
+     "frequency": "1 mL once a day",
+     "purpose": "Upper respiratory infection",
+     "prescriber": "Dr. Priya Raman",
+     "start": "2024-12-09",
+     "end": "2024-12-19",
+     "whyStopped": "Course finished"
+    }
+   ],
+   "vaccines": [
+    {
+     "id": "mwd2ns57yxof8l6e7",
+     "name": "FVRCP",
+     "dateGiven": "2025-07-20",
+     "nextDue": "2028-07-20",
+     "clinic": "Maple Street Animal Hospital",
+     "lot": "FV-30984"
+    },
+    {
+     "id": "mwd2ns57eyygxy82h",
+     "name": "Rabies",
+     "dateGiven": "2025-07-20",
+     "nextDue": "2026-07-20",
+     "clinic": "Maple Street Animal Hospital",
+     "notes": "1-year non-adjuvanted"
+    },
+    {
+     "id": "mwd2ns573ppg9giuk",
+     "name": "Rabies",
+     "dateGiven": "2025-11-30",
+     "nextDue": "2026-11-30",
+     "clinic": "Maple Street Animal Hospital",
+     "lot": "PV-11873",
+     "notes": "1-year non-adjuvanted"
+    }
+   ],
+   "weights": [
+    {
+     "id": "mwd2ns57bnxlbmry9",
+     "date": "2025-01-10",
+     "weight": 9.2
+    },
+    {
+     "id": "mwd2ns576jj47ixwl",
+     "date": "2025-04-10",
+     "weight": 9.4
+    },
+    {
+     "id": "mwd2ns57e545b18j2",
+     "date": "2025-09-10",
+     "weight": 9.8
+    },
+    {
+     "id": "mwd2ns57oou6xwngi",
+     "date": "2025-11-10",
+     "weight": 9.9
+    },
+    {
+     "id": "mwd2ns57h2bsv17bi",
+     "date": "2026-04-10",
+     "weight": 10.4
+    },
+    {
+     "id": "mwd2ns57rbtpum3og",
+     "date": "2026-05-10",
+     "weight": 10.5
+    },
+    {
+     "id": "mwd2ns57zc4ixrnph",
+     "date": "2026-09-10",
+     "weight": 10.6
+    },
+    {
+     "id": "mwd2ns57k2x35pb25",
+     "date": "2024-12-09",
+     "weight": 9.1,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns57ilxk1glgz",
+     "date": "2025-07-20",
+     "weight": 9.6,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns57zfxel0v7g",
+     "date": "2026-02-04",
+     "weight": 10.2,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns57hyozavbm9",
+     "date": "2026-07-22",
+     "weight": 10.8,
+     "notes": "From vet visit"
+    },
+    {
+     "id": "mwd2ns57w9eg2nrgy",
+     "date": "2026-11-06",
+     "weight": 10.5,
+     "notes": "From vet visit"
+    }
+   ],
+   "observations": [
+    {
+     "id": "mwd2ns57spk6rcc06",
+     "date": "2026-02-02",
+     "category": "Urination",
+     "severity": "2",
+     "note": "Going to the litter box often, small amounts."
+    },
+    {
+     "id": "mwd2ns57nnrcx755m",
+     "date": "2026-10-29",
+     "category": "Vomiting",
+     "severity": "1",
+     "note": "Hairball in the hallway."
+    },
+    {
+     "id": "mwd2ns57ebic3l0mi",
+     "date": "2026-11-03",
+     "category": "Vomiting",
+     "severity": "1",
+     "note": "Hairball again after breakfast."
+    },
+    {
+     "id": "mwd2ns57p5wjbrx3w",
+     "date": "2026-11-05",
+     "category": "Vomiting",
+     "severity": "2",
+     "note": "Vomited twice, left half her food."
+    },
+    {
+     "id": "mwd2ns57m1jm46bzx",
+     "date": "2026-11-05",
+     "category": "Appetite",
+     "severity": "2",
+     "note": "Ate about half her usual wet food."
+    },
+    {
+     "id": "mwd2ns57xus5duj6t",
+     "date": "2026-11-10",
+     "category": "Appetite",
+     "severity": "1",
+     "note": "Eating normally again."
+    }
+   ],
+   "notes": [
+    {
+     "id": "mwd2ns5790p94qpgn",
+     "date": "2024-09-01",
+     "title": "Adopted",
+     "text": "Adopted from Lane County Animal Shelter. Birth date unknown; the shelter vet estimated her at about 18 months old."
+    },
+    {
+     "id": "mwd2ns571ltececlc",
+     "date": "2025-06-01",
+     "title": "Insurance switch",
+     "text": "Added Mochi to Biscuit’s Paws & Claws plan (now a multi-pet plan) and cancelled Whisker Shield."
+    }
+   ],
+   "dobMode": "estimated",
+   "ageYears": 1,
+   "ageMonths": 6,
+   "ageAsOf": "2024-09-12"
+  }
+ ],
+ "activePetId": "mwd2ns56gv1znu",
+ "settings": {
+  "currency": "USD",
+  "dateFormat": "MMM D, YYYY",
+  "weightUnit": "lb",
+  "analysisPeriod": "all",
+  "goodRatio": 1,
+  "fairRatio": 0.5,
+  "includePending": true,
+  "emergencyExample": 5000,
+  "pdfFolder": "Pet Dashboard/Reports",
+  "pageSize": "Letter",
+  "openAfterExport": true,
+  "ownerName": "",
+  "photoSize": "medium",
+  "photoFolder": "Pet Dashboard/Photos",
+  "speciesList": [
+   "Dog",
+   "Cat",
+   "Rabbit",
+   "Bird",
+   "Guinea pig",
+   "Hamster",
+   "Ferret",
+   "Fish",
+   "Turtle",
+   "Lizard",
+   "Snake",
+   "Horse"
+  ]
+ },
+ "policies": [
+  {
+   "id": "mwd2ns5644fi8xg5q",
+   "petIds": [
+    "mwd2ns569qjxcc"
+   ],
+   "split": "equal",
+   "shares": {},
+   "provider": "Whisker Shield",
+   "plan": "Cat Essentials",
+   "policyNumber": "WS-448812",
+   "coverage": "Accident & illness",
+   "start": "2024-09-01",
+   "end": "2025-05-31",
+   "premium": 22,
+   "frequency": "monthly",
+   "deductible": 100,
+   "deductibleType": "annual",
+   "deductibleScope": "perPet",
+   "limitScope": "perPet",
+   "reimbursement": 90,
+   "annualLimit": 5000,
+   "waitingPeriod": 14,
+   "exclusions": "Pre-existing conditions, dental cleaning",
+   "phone": "(800) 555-0142",
+   "website": "whiskershield.example",
+   "notes": "Cancelled when we moved both pets to one multi-pet plan."
+  },
+  {
+   "id": "mwd2ns56zpkvt2aw9",
+   "petIds": [
+    "mwd2ns56gv1znu",
+    "mwd2ns569qjxcc"
+   ],
+   "split": "custom",
+   "shares": {
+    "mwd2ns56gv1znu": 65,
+    "mwd2ns569qjxcc": 35
+   },
+   "petStart": {
+    "mwd2ns569qjxcc": "2025-06-01"
+   },
+   "petEnd": {},
+   "provider": "Paws & Claws Mutual",
+   "plan": "Multi-Pet Plus",
+   "policyNumber": "PCM-2025-77310",
+   "coverage": "Accident & illness",
+   "start": "2025-03-01",
+   "end": "",
+   "premium": 58,
+   "frequency": "monthly",
+   "deductible": 250,
+   "deductibleType": "annual",
+   "deductibleScope": "perPet",
+   "limitScope": "perPet",
+   "reimbursement": 80,
+   "annualLimit": 10000,
+   "waitingPeriod": 14,
+   "exclusions": "Pre-existing conditions, routine dental cleaning, wellness care, breeding",
+   "phone": "(800) 555-0199",
+   "website": "pawsandclaws.example",
+   "notes": "Started for Biscuit; Mochi added three months later with a 10% multi-pet discount."
+  }
+ ],
+ "premiumChanges": [
+  {
+   "id": "mwd2ns56hsfizfj8n",
+   "policyId": "mwd2ns56zpkvt2aw9",
+   "date": "2025-06-01",
+   "amount": 86,
+   "reason": "Pet added (Mochi), 10% multi-pet discount"
+  },
+  {
+   "id": "mwd2ns56a2d05zrkc",
+   "policyId": "mwd2ns56zpkvt2aw9",
+   "date": "2026-03-01",
+   "amount": 94,
+   "reason": "Renewal"
+  }
+ ],
+ "claims": [
+  {
+   "id": "mwd2ns56bg7cka7fs",
+   "petId": "mwd2ns56gv1znu",
+   "visitId": "mwd2ns56xfg9onpkh",
+   "policyId": "mwd2ns56zpkvt2aw9",
+   "serviceDate": "2025-04-06",
+   "amountClaimed": 210,
+   "condition": "Otitis externa (yeast)",
+   "status": "approved",
+   "submittedDate": "2025-04-07",
+   "paidDate": "2025-04-18",
+   "deductibleApplied": 210,
+   "eligibleAmount": 210,
+   "reimbursed": 0,
+   "claimNumber": "C-10021",
+   "notes": "All toward deductible."
+  },
+  {
+   "id": "mwd2ns56fk9dbsbmy",
+   "petId": "mwd2ns56gv1znu",
+   "visitId": "mwd2ns56w0regpgqu",
+   "policyId": "mwd2ns56zpkvt2aw9",
+   "serviceDate": "2025-09-03",
+   "amountClaimed": 640,
+   "condition": "Soft-tissue strain, no fracture on X-ray",
+   "status": "approved",
+   "submittedDate": "2025-09-04",
+   "paidDate": "2025-09-15",
+   "deductibleApplied": 40,
+   "eligibleAmount": 640,
+   "reimbursed": 480,
+   "claimNumber": "C-10388"
+  },
+  {
+   "id": "mwd2ns57b9yipnrl2",
+   "petId": "mwd2ns56gv1znu",
+   "visitId": "mwd2ns579n32np0bh",
+   "policyId": "mwd2ns56zpkvt2aw9",
+   "serviceDate": "2025-12-21",
+   "amountClaimed": 3850,
+   "condition": "Intestinal foreign body",
+   "status": "approved",
+   "submittedDate": "2025-12-24",
+   "paidDate": "2026-01-09",
+   "deductibleApplied": 0,
+   "eligibleAmount": 3850,
+   "reimbursed": 3080,
+   "claimNumber": "C-11042"
+  },
+  {
+   "id": "mwd2ns57yseca75vc",
+   "petId": "mwd2ns56gv1znu",
+   "visitId": "mwd2ns57v6qyv95kt",
+   "policyId": "mwd2ns56zpkvt2aw9",
+   "serviceDate": "2026-03-09",
+   "amountClaimed": 95,
+   "condition": "Healing well",
+   "status": "approved",
+   "submittedDate": "2026-03-10",
+   "paidDate": "2026-03-19",
+   "deductibleApplied": 95,
+   "eligibleAmount": 95,
+   "reimbursed": 0,
+   "claimNumber": "C-11590"
+  },
+  {
+   "id": "mwd2ns575ilxiozgg",
+   "petId": "mwd2ns56gv1znu",
+   "visitId": "mwd2ns579gxnhw4w4",
+   "policyId": "mwd2ns56zpkvt2aw9",
+   "serviceDate": "2026-08-18",
+   "amountClaimed": 180,
+   "condition": "Atopic dermatitis",
+   "status": "approved",
+   "submittedDate": "2026-08-19",
+   "paidDate": "2026-08-30",
+   "deductibleApplied": 155,
+   "eligibleAmount": 180,
+   "reimbursed": 20,
+   "claimNumber": "C-12201"
+  },
+  {
+   "id": "mwd2ns57g62ws5ndf",
+   "petId": "mwd2ns56gv1znu",
+   "visitId": "mwd2ns57tjfx7n0z6",
+   "policyId": "mwd2ns56zpkvt2aw9",
+   "serviceDate": "2026-10-06",
+   "amountClaimed": 620,
+   "condition": "Mild tartar, no extractions",
+   "status": "denied",
+   "submittedDate": "2026-10-07",
+   "paidDate": "2026-10-20",
+   "reimbursed": 0,
+   "denialReason": "Routine dental cleaning not covered",
+   "claimNumber": "C-12730"
+  },
+  {
+   "id": "mwd2ns57pge85a88a",
+   "petId": "mwd2ns56gv1znu",
+   "visitId": "mwd2ns57vzanodoi9",
+   "policyId": "mwd2ns56zpkvt2aw9",
+   "serviceDate": "2026-11-02",
+   "amountClaimed": 240,
+   "condition": "Acute gastritis, likely dietary",
+   "status": "submitted",
+   "submittedDate": "2026-11-03",
+   "claimNumber": "C-13105"
+  },
+  {
+   "id": "mwd2ns575tgw910u9",
+   "petId": "mwd2ns569qjxcc",
+   "visitId": "mwd2ns57c38qab3hn",
+   "policyId": "mwd2ns5644fi8xg5q",
+   "serviceDate": "2024-12-09",
+   "amountClaimed": 180,
+   "condition": "Upper respiratory infection",
+   "status": "approved",
+   "submittedDate": "2024-12-10",
+   "paidDate": "2024-12-24",
+   "deductibleApplied": 100,
+   "eligibleAmount": 180,
+   "reimbursed": 72,
+   "claimNumber": "WS-3391"
+  },
+  {
+   "id": "mwd2ns57q2aui9o0t",
+   "petId": "mwd2ns569qjxcc",
+   "visitId": "mwd2ns578kas29wfz",
+   "policyId": "mwd2ns56zpkvt2aw9",
+   "serviceDate": "2026-02-04",
+   "amountClaimed": 320,
+   "condition": "Bacterial cystitis (UTI)",
+   "status": "approved",
+   "submittedDate": "2026-02-05",
+   "paidDate": "2026-02-21",
+   "deductibleApplied": 250,
+   "eligibleAmount": 320,
+   "reimbursed": 56,
+   "claimNumber": "C-11402"
+  },
+  {
+   "id": "mwd2ns57xyrs3jkly",
+   "petId": "mwd2ns569qjxcc",
+   "visitId": "mwd2ns57apx67yrss",
+   "policyId": "mwd2ns56zpkvt2aw9",
+   "serviceDate": "2026-11-06",
+   "amountClaimed": 150,
+   "condition": "Hairball-related gastritis",
+   "status": "review",
+   "submittedDate": "2026-11-07",
+   "claimNumber": "C-13140"
+  }
+ ]
+}
