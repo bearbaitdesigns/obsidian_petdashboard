@@ -223,6 +223,7 @@ class FormModal extends Modal {
     const err = h('div', { class: 'pd-error' });
     const actions = h('div', { class: 'pd-form-actions' });
     if (o.onDelete) actions.append(btn('Delete', () => { this.close(); confirmBox(this.app, 'Delete this record?', o.onDelete); }, { cls: 'mod-warning', icon: 'trash-2' }));
+    if (o.onDeleteDirect) actions.append(btn(o.onDeleteLabel || 'Delete', () => { this.close(); o.onDeleteDirect(); }, { cls: 'mod-warning', icon: 'trash-2' }));
     actions.append(h('span', { class: 'pd-spacer' }));
     actions.append(btn('Cancel', () => this.close()));
     const save = btn(o.submitLabel || 'Save', () => form.requestSubmit ? form.requestSubmit() : submit(), { cls: 'mod-cta' });

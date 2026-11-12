@@ -361,3 +361,12 @@
   .pd-wi-tile-value { font-size: 1.15em; }
 }
 @media (max-width: 420px) { .pd-wi-tiles { grid-template-columns: minmax(0, 1fr); } }
+
+/* delete a pet */
+.pd-delete-modal { width: min(560px, 94vw); }
+.pd-delete-alt { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: var(--background-secondary); border-radius: 8px; padding: 10px 12px; margin: 10px 0 14px; font-size: var(--font-ui-small); }
+.pd-delete-alt > div { flex: 1; min-width: 200px; }
+.pd-delete-alt > .pd-icon { color: var(--text-muted); }
+.pd-delete-confirm { margin-bottom: 4px; }
+.pd-delete-confirm input { width: 100%; }
+.pd-form-actions button:disabled { opacity: .45; cursor: not-allowed; }

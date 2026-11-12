@@ -285,3 +285,43 @@ class ArchiveModal extends Modal {
   }
   onClose() { clear(this.contentEl); }
 }
+
+/* ---------------- delete a pet ---------------- */
+class DeletePetModal extends Modal {
+  constructor(app, plugin, pet) { super(app); this.plugin = plugin; this.pet = pet; }
+  onOpen() {
+    const { contentEl, pet, plugin } = this, data = plugin.data, plan = deletePlan(data, pet), name = petLabel(pet);
+    this.modalEl.addClass && this.modalEl.addClass('pd-modal', 'pd-delete-modal', 'pd-root');
+    contentEl.append(h('h3', { class: 'pd-modal-title' }, `Delete ${name}?`));
+    contentEl.append(h('p', {}, `This permanently removes ${name} and everything recorded for them. It can’t be undone.`));
+    const c = plan.counts, list = [];
+    const add = (n, w) => { if (n) list.push(plural(n, w)); };
+    add(c.visits, 'vet visit'); add(c.meds, 'medication'); add(c.vaccines, 'vaccination'); add(c.weights, 'weight'); add(c.observations, 'observation'); add(c.notes, 'note'); add(plan.claims.length, 'insurance claim');
+    const items = [h('li', { text: list.length ? `Health and insurance records: ${list.join(', ')}.` : 'The profile (no records yet).' })];
+    if (pet.photo) items.push(h('li', { text: 'The photo (moved to your vault’s trash).' }));
+    if (plan.own.length) items.push(h('li', { text: `${plural(plan.own.length, 'policy', 'policies')} that only covered ${name}: ${plan.own.map(policyLabel).join(', ')}, with its premium history.` }));
+    if (plan.shared.length) items.push(h('li', { text: `${name} is taken off ${plan.shared.map(policyLabel).join(', ')}. The plan stays for ${plan.shared.flatMap((p) => petsOnPolicy(data, p)).filter((p) => p.id !== pet.id).map(petLabel).filter((v, i, a) => a.indexOf(v) === i).join(', ')}, but ${name}’s past share of premiums and claims will no longer count in its figures.` }));
+    if (plan.scenarios.length) items.push(h('li', { text: `Changes about ${name} in ${plural(plan.scenarios.length, 'What-if scenario')}.` }));
+    if (data.pets.length === 1) items.push(h('li', { text: `${name} is your only pet, so the dashboard starts again with a blank profile.` }));
+    contentEl.append(h('ul', { class: 'pd-bullets' }, items));
+    if (!isArchived(pet)) contentEl.append(h('div', { class: 'pd-delete-alt' }, icon('archive'), h('div', {},
+      h('strong', { text: 'Want to keep the history? ' }), `Archive ${name} instead. Records stay viewable and printable, reminders stop, and shared plans keep their figures.`),
+      btn('Archive instead', () => { this.close(); new ArchiveModal(this.app, plugin, pet).open(); }, { icon: 'archive' })));
+    const input = h('input', { type: 'text', id: 'pd-delete-confirm', autocomplete: 'off', placeholder: name, 'aria-label': `Type ${name} to confirm` });
+    contentEl.append(h('div', { class: 'pd-form-row pd-delete-confirm' }, h('label', { for: 'pd-delete-confirm' }, 'Type ', h('strong', { text: name }), ' to confirm'), input));
+    const del = btn(`Delete ${name}`, async () => {
+      if (input.value.trim().toLowerCase() !== name.trim().toLowerCase()) return;
+      this.close();
+      await plugin.removePhotoFile(pet);
+      deletePetData(data, pet);
+      await plugin.saveAll();
+      new Notice(`${name} deleted.`);
+    }, { cls: 'mod-warning', icon: 'trash-2' });
+    del.disabled = true;
+    input.addEventListener('input', () => { del.disabled = input.value.trim().toLowerCase() !== name.trim().toLowerCase(); });
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !del.disabled) del.click(); });
+    contentEl.append(h('div', { class: 'pd-form-actions' }, h('span', { class: 'pd-spacer' }), btn('Cancel', () => this.close()), del));
+    setTimeout(() => input.focus(), 30);
+  }
+  onClose() { clear(this.contentEl); }
+}

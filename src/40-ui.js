@@ -173,7 +173,8 @@ class DashboardUI {
 
     // pet profile + alerts
     const prof = this.section('Profile', [btn(this.plugin.photoSrc(pet) ? 'Photo' : 'Add photo', () => new PhotoModal(this.app, this.plugin, pet).open(), { icon: 'camera' }), btn('Edit', () => this.editPet(), { icon: 'pencil' }),
-      isArchived(pet) ? btn('Restore', () => this.restorePet(), { icon: 'archive-restore', title: 'Move back to active pets' }) : btn('Archive', () => new ArchiveModal(this.app, this.plugin, pet).open(), { icon: 'archive', title: 'Archive this pet and keep its history' })]);
+      isArchived(pet) ? btn('Restore', () => this.restorePet(), { icon: 'archive-restore', title: 'Move back to active pets' }) : btn('Archive', () => new ArchiveModal(this.app, this.plugin, pet).open(), { icon: 'archive', title: 'Archive this pet and keep its history' }),
+      btn('Delete', () => new DeletePetModal(this.app, this.plugin, pet).open(), { icon: 'trash-2', cls: 'pd-danger', title: 'Delete this pet and all its records' })]);
     const kv = (k, v) => v ? h('div', { class: 'pd-kv' }, h('span', { class: 'pd-k' }, k), h('span', { class: 'pd-v' }, v)) : null;
     prof.body.append(h('div', { class: 'pd-profile' },
       this.avatar(pet, 'profile'),
@@ -261,12 +262,7 @@ class DashboardUI {
     const pet = this.pet;
     const pf = petFields(this.data);
     new FormModal(this.app, { title: `Edit ${petLabel(pet)}`, fields: pf, onReady: pf.onReady, validate: pf.validate, initial: Object.assign({ dobMode: pet.dob || !pet.ageYears ? 'known' : 'estimated' }, pet),
-      onDelete: this.data.pets.length > 1 ? async () => {
-        await this.plugin.removePhotoFile(pet);
-        this.data.pets = this.data.pets.filter((p) => p.id !== pet.id); this.data.activePetId = this.data.pets[0].id;
-        this.data.claims = this.data.claims.filter((c) => c.petId !== pet.id);
-        this.data.policies.forEach((p) => { p.petIds = p.petIds.filter((id) => id !== pet.id); });
-        await this.save(); } : null,
+      onDeleteLabel: 'Delete pet', onDeleteDirect: () => new DeletePetModal(this.app, this.plugin, pet).open(),
       onSubmit: async (v) => { Object.assign(pet, v); await this.save(); } }).open();
   }
 

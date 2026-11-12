@@ -237,6 +237,33 @@ function bornLabel(pet, fmt) {
   const b = birthInfo(pet); if (!b) return '';
   return b.estimated ? `Date of birth unknown · born around ${MONTHS[parseISO(b.dob).getMonth()]} ${parseISO(b.dob).getFullYear()} (age estimated on ${fmtDate(b.asOf, fmt)})` : fmtDate(b.dob, fmt);
 }
+/* What deleting a pet would remove, and the removal itself */
+function deletePlan(data, pet) {
+  const own = data.policies.filter((p) => p.petIds.includes(pet.id) && p.petIds.filter((id) => data.pets.some((x) => x.id === id)).length === 1);
+  const shared = data.policies.filter((p) => p.petIds.includes(pet.id) && !own.includes(p));
+  const claims = data.claims.filter((c) => c.petId === pet.id);
+  const sc = ((data.whatIf && data.whatIf.scenarios) || []).filter((s) => (s.events || []).some((e) => wiEventUsesPet(e, pet, claims)));
+  return { own, shared, claims, scenarios: sc, counts: { visits: pet.visits.length, meds: pet.meds.length, vaccines: pet.vaccines.length, weights: pet.weights.length, observations: pet.observations.length, notes: pet.notes.length } };
+}
+function wiEventUsesPet(e, pet, claims) {
+  return e.petId === pet.id || e.who === pet.id || (e.claimId && e.claimId !== '*open*' && claims.some((c) => c.id === e.claimId));
+}
+function deletePetData(data, pet) {
+  const plan = deletePlan(data, pet), ownIds = new Set(plan.own.map((p) => p.id)), claimIds = new Set(plan.claims.map((c) => c.id));
+  data.policies = data.policies.filter((p) => !ownIds.has(p.id));
+  data.premiumChanges = data.premiumChanges.filter((c) => !ownIds.has(c.policyId));
+  data.policies.forEach((p) => {
+    p.petIds = p.petIds.filter((id) => id !== pet.id);
+    ['shares', 'petStart', 'petEnd'].forEach((k) => { if (p[k]) delete p[k][pet.id]; });
+  });
+  data.claims = data.claims.filter((c) => c.petId !== pet.id && !ownIds.has(c.policyId));
+  const st = data.whatIf;
+  if (st && Array.isArray(st.scenarios)) st.scenarios.forEach((s) => { s.events = (s.events || []).filter((e) => !wiEventUsesPet(e, pet, plan.claims) && !(e.claimId && claimIds.has(e.claimId))); });
+  data.pets = data.pets.filter((p) => p.id !== pet.id);
+  if (!data.pets.length) data.pets.push(newPet(''));
+  if (!data.pets.some((p) => p.id === data.activePetId)) data.activePetId = (data.pets.find((p) => !isArchived(p)) || data.pets[0]).id;
+  return plan;
+}
 function petLabel(pet) { return (pet && pet.name) || 'Unnamed pet'; }
 function policyLabel(p) { return `${p.provider || 'Policy'}${p.plan ? ' – ' + p.plan : ''}`; }
 
@@ -821,6 +848,7 @@ class FormModal extends Modal {
     const err = h('div', { class: 'pd-error' });
     const actions = h('div', { class: 'pd-form-actions' });
     if (o.onDelete) actions.append(btn('Delete', () => { this.close(); confirmBox(this.app, 'Delete this record?', o.onDelete); }, { cls: 'mod-warning', icon: 'trash-2' }));
+    if (o.onDeleteDirect) actions.append(btn(o.onDeleteLabel || 'Delete', () => { this.close(); o.onDeleteDirect(); }, { cls: 'mod-warning', icon: 'trash-2' }));
     actions.append(h('span', { class: 'pd-spacer' }));
     actions.append(btn('Cancel', () => this.close()));
     const save = btn(o.submitLabel || 'Save', () => form.requestSubmit ? form.requestSubmit() : submit(), { cls: 'mod-cta' });
@@ -1239,7 +1267,8 @@ class DashboardUI {
 
     // pet profile + alerts
     const prof = this.section('Profile', [btn(this.plugin.photoSrc(pet) ? 'Photo' : 'Add photo', () => new PhotoModal(this.app, this.plugin, pet).open(), { icon: 'camera' }), btn('Edit', () => this.editPet(), { icon: 'pencil' }),
-      isArchived(pet) ? btn('Restore', () => this.restorePet(), { icon: 'archive-restore', title: 'Move back to active pets' }) : btn('Archive', () => new ArchiveModal(this.app, this.plugin, pet).open(), { icon: 'archive', title: 'Archive this pet and keep its history' })]);
+      isArchived(pet) ? btn('Restore', () => this.restorePet(), { icon: 'archive-restore', title: 'Move back to active pets' }) : btn('Archive', () => new ArchiveModal(this.app, this.plugin, pet).open(), { icon: 'archive', title: 'Archive this pet and keep its history' }),
+      btn('Delete', () => new DeletePetModal(this.app, this.plugin, pet).open(), { icon: 'trash-2', cls: 'pd-danger', title: 'Delete this pet and all its records' })]);
     const kv = (k, v) => v ? h('div', { class: 'pd-kv' }, h('span', { class: 'pd-k' }, k), h('span', { class: 'pd-v' }, v)) : null;
     prof.body.append(h('div', { class: 'pd-profile' },
       this.avatar(pet, 'profile'),
@@ -1327,12 +1356,7 @@ class DashboardUI {
     const pet = this.pet;
     const pf = petFields(this.data);
     new FormModal(this.app, { title: `Edit ${petLabel(pet)}`, fields: pf, onReady: pf.onReady, validate: pf.validate, initial: Object.assign({ dobMode: pet.dob || !pet.ageYears ? 'known' : 'estimated' }, pet),
-      onDelete: this.data.pets.length > 1 ? async () => {
-        await this.plugin.removePhotoFile(pet);
-        this.data.pets = this.data.pets.filter((p) => p.id !== pet.id); this.data.activePetId = this.data.pets[0].id;
-        this.data.claims = this.data.claims.filter((c) => c.petId !== pet.id);
-        this.data.policies.forEach((p) => { p.petIds = p.petIds.filter((id) => id !== pet.id); });
-        await this.save(); } : null,
+      onDeleteLabel: 'Delete pet', onDeleteDirect: () => new DeletePetModal(this.app, this.plugin, pet).open(),
       onSubmit: async (v) => { Object.assign(pet, v); await this.save(); } }).open();
   }
 
@@ -1921,6 +1945,46 @@ class ArchiveModal extends Modal {
         await plugin.saveAll();
         new Notice(`${petLabel(pet)} archived.`);
       }, { cls: 'mod-cta', icon: 'archive' })));
+  }
+  onClose() { clear(this.contentEl); }
+}
+
+/* ---------------- delete a pet ---------------- */
+class DeletePetModal extends Modal {
+  constructor(app, plugin, pet) { super(app); this.plugin = plugin; this.pet = pet; }
+  onOpen() {
+    const { contentEl, pet, plugin } = this, data = plugin.data, plan = deletePlan(data, pet), name = petLabel(pet);
+    this.modalEl.addClass && this.modalEl.addClass('pd-modal', 'pd-delete-modal', 'pd-root');
+    contentEl.append(h('h3', { class: 'pd-modal-title' }, `Delete ${name}?`));
+    contentEl.append(h('p', {}, `This permanently removes ${name} and everything recorded for them. It can’t be undone.`));
+    const c = plan.counts, list = [];
+    const add = (n, w) => { if (n) list.push(plural(n, w)); };
+    add(c.visits, 'vet visit'); add(c.meds, 'medication'); add(c.vaccines, 'vaccination'); add(c.weights, 'weight'); add(c.observations, 'observation'); add(c.notes, 'note'); add(plan.claims.length, 'insurance claim');
+    const items = [h('li', { text: list.length ? `Health and insurance records: ${list.join(', ')}.` : 'The profile (no records yet).' })];
+    if (pet.photo) items.push(h('li', { text: 'The photo (moved to your vault’s trash).' }));
+    if (plan.own.length) items.push(h('li', { text: `${plural(plan.own.length, 'policy', 'policies')} that only covered ${name}: ${plan.own.map(policyLabel).join(', ')}, with its premium history.` }));
+    if (plan.shared.length) items.push(h('li', { text: `${name} is taken off ${plan.shared.map(policyLabel).join(', ')}. The plan stays for ${plan.shared.flatMap((p) => petsOnPolicy(data, p)).filter((p) => p.id !== pet.id).map(petLabel).filter((v, i, a) => a.indexOf(v) === i).join(', ')}, but ${name}’s past share of premiums and claims will no longer count in its figures.` }));
+    if (plan.scenarios.length) items.push(h('li', { text: `Changes about ${name} in ${plural(plan.scenarios.length, 'What-if scenario')}.` }));
+    if (data.pets.length === 1) items.push(h('li', { text: `${name} is your only pet, so the dashboard starts again with a blank profile.` }));
+    contentEl.append(h('ul', { class: 'pd-bullets' }, items));
+    if (!isArchived(pet)) contentEl.append(h('div', { class: 'pd-delete-alt' }, icon('archive'), h('div', {},
+      h('strong', { text: 'Want to keep the history? ' }), `Archive ${name} instead. Records stay viewable and printable, reminders stop, and shared plans keep their figures.`),
+      btn('Archive instead', () => { this.close(); new ArchiveModal(this.app, plugin, pet).open(); }, { icon: 'archive' })));
+    const input = h('input', { type: 'text', id: 'pd-delete-confirm', autocomplete: 'off', placeholder: name, 'aria-label': `Type ${name} to confirm` });
+    contentEl.append(h('div', { class: 'pd-form-row pd-delete-confirm' }, h('label', { for: 'pd-delete-confirm' }, 'Type ', h('strong', { text: name }), ' to confirm'), input));
+    const del = btn(`Delete ${name}`, async () => {
+      if (input.value.trim().toLowerCase() !== name.trim().toLowerCase()) return;
+      this.close();
+      await plugin.removePhotoFile(pet);
+      deletePetData(data, pet);
+      await plugin.saveAll();
+      new Notice(`${name} deleted.`);
+    }, { cls: 'mod-warning', icon: 'trash-2' });
+    del.disabled = true;
+    input.addEventListener('input', () => { del.disabled = input.value.trim().toLowerCase() !== name.trim().toLowerCase(); });
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !del.disabled) del.click(); });
+    contentEl.append(h('div', { class: 'pd-form-actions' }, h('span', { class: 'pd-spacer' }), btn('Cancel', () => this.close()), del));
+    setTimeout(() => input.focus(), 30);
   }
   onClose() { clear(this.contentEl); }
 }
@@ -3082,7 +3146,8 @@ class PetDashboardSettingTab extends PluginSettingTab {
       new Setting(containerEl).setName(petLabel(pet)).setDesc(`Shown as “${dashboardTitle(pet)}”.`)
         .addDropdown((d) => d.addOption('default', 'Pet Dashboard').addOption('pet', pet.name ? `${pet.name} Dashboard` : '[pet’s name] Dashboard').addOption('custom', 'Custom')
           .setValue(pet.titleMode || 'default').onChange(async (v) => { pet.titleMode = v; await p.saveAll(); this.display(); }))
-        .addText((t) => { t.setPlaceholder('Custom name').setValue(pet.customTitle || '').onChange(async (v) => { pet.customTitle = v; if (v) pet.titleMode = 'custom'; await p.saveAll(); }); });
+        .addText((t) => { t.setPlaceholder('Custom name').setValue(pet.customTitle || '').onChange(async (v) => { pet.customTitle = v; if (v) pet.titleMode = 'custom'; await p.saveAll(); }); })
+        .addButton((b) => { b.setButtonText('Delete').onClick(() => { const m = new DeletePetModal(this.app, p, pet); const oc = m.onClose.bind(m); m.onClose = () => { oc(); setTimeout(() => this.display(), 50); }; m.open(); }); if (b.setWarning) b.setWarning(); if (b.setTooltip) b.setTooltip(`Delete ${petLabel(pet)} and all its records`); });
     });
     containerEl.append(h('h3', { text: 'Species' }));
     new Setting(containerEl).setName('Species list').setDesc('Suggestions offered when adding a pet, one per line. You can always type a species that is not listed; it is added to the suggestions automatically.')

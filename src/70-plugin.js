@@ -224,7 +224,8 @@ class PetDashboardSettingTab extends PluginSettingTab {
       new Setting(containerEl).setName(petLabel(pet)).setDesc(`Shown as “${dashboardTitle(pet)}”.`)
         .addDropdown((d) => d.addOption('default', 'Pet Dashboard').addOption('pet', pet.name ? `${pet.name} Dashboard` : '[pet’s name] Dashboard').addOption('custom', 'Custom')
           .setValue(pet.titleMode || 'default').onChange(async (v) => { pet.titleMode = v; await p.saveAll(); this.display(); }))
-        .addText((t) => { t.setPlaceholder('Custom name').setValue(pet.customTitle || '').onChange(async (v) => { pet.customTitle = v; if (v) pet.titleMode = 'custom'; await p.saveAll(); }); });
+        .addText((t) => { t.setPlaceholder('Custom name').setValue(pet.customTitle || '').onChange(async (v) => { pet.customTitle = v; if (v) pet.titleMode = 'custom'; await p.saveAll(); }); })
+        .addButton((b) => { b.setButtonText('Delete').onClick(() => { const m = new DeletePetModal(this.app, p, pet); const oc = m.onClose.bind(m); m.onClose = () => { oc(); setTimeout(() => this.display(), 50); }; m.open(); }); if (b.setWarning) b.setWarning(); if (b.setTooltip) b.setTooltip(`Delete ${petLabel(pet)} and all its records`); });
     });
     containerEl.append(h('h3', { text: 'Species' }));
     new Setting(containerEl).setName('Species list').setDesc('Suggestions offered when adding a pet, one per line. You can always type a species that is not listed; it is added to the suggestions automatically.')

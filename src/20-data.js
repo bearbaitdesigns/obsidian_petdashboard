@@ -74,6 +74,33 @@ function bornLabel(pet, fmt) {
   const b = birthInfo(pet); if (!b) return '';
   return b.estimated ? `Date of birth unknown · born around ${MONTHS[parseISO(b.dob).getMonth()]} ${parseISO(b.dob).getFullYear()} (age estimated on ${fmtDate(b.asOf, fmt)})` : fmtDate(b.dob, fmt);
 }
+/* What deleting a pet would remove, and the removal itself */
+function deletePlan(data, pet) {
+  const own = data.policies.filter((p) => p.petIds.includes(pet.id) && p.petIds.filter((id) => data.pets.some((x) => x.id === id)).length === 1);
+  const shared = data.policies.filter((p) => p.petIds.includes(pet.id) && !own.includes(p));
+  const claims = data.claims.filter((c) => c.petId === pet.id);
+  const sc = ((data.whatIf && data.whatIf.scenarios) || []).filter((s) => (s.events || []).some((e) => wiEventUsesPet(e, pet, claims)));
+  return { own, shared, claims, scenarios: sc, counts: { visits: pet.visits.length, meds: pet.meds.length, vaccines: pet.vaccines.length, weights: pet.weights.length, observations: pet.observations.length, notes: pet.notes.length } };
+}
+function wiEventUsesPet(e, pet, claims) {
+  return e.petId === pet.id || e.who === pet.id || (e.claimId && e.claimId !== '*open*' && claims.some((c) => c.id === e.claimId));
+}
+function deletePetData(data, pet) {
+  const plan = deletePlan(data, pet), ownIds = new Set(plan.own.map((p) => p.id)), claimIds = new Set(plan.claims.map((c) => c.id));
+  data.policies = data.policies.filter((p) => !ownIds.has(p.id));
+  data.premiumChanges = data.premiumChanges.filter((c) => !ownIds.has(c.policyId));
+  data.policies.forEach((p) => {
+    p.petIds = p.petIds.filter((id) => id !== pet.id);
+    ['shares', 'petStart', 'petEnd'].forEach((k) => { if (p[k]) delete p[k][pet.id]; });
+  });
+  data.claims = data.claims.filter((c) => c.petId !== pet.id && !ownIds.has(c.policyId));
+  const st = data.whatIf;
+  if (st && Array.isArray(st.scenarios)) st.scenarios.forEach((s) => { s.events = (s.events || []).filter((e) => !wiEventUsesPet(e, pet, plan.claims) && !(e.claimId && claimIds.has(e.claimId))); });
+  data.pets = data.pets.filter((p) => p.id !== pet.id);
+  if (!data.pets.length) data.pets.push(newPet(''));
+  if (!data.pets.some((p) => p.id === data.activePetId)) data.activePetId = (data.pets.find((p) => !isArchived(p)) || data.pets[0]).id;
+  return plan;
+}
 function petLabel(pet) { return (pet && pet.name) || 'Unnamed pet'; }
 function policyLabel(p) { return `${p.provider || 'Policy'}${p.plan ? ' – ' + p.plan : ''}`; }
 
