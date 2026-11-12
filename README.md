@@ -74,4 +74,4 @@ The plugin has no dependencies or bundler. `src/` is split into numbered files t
 ./build.sh
 ```
 
-To release a new version, bump `version` in `manifest.json` (and add it to `versions.json`), run `./build.sh`, commit, then create a GitHub release whose tag is exactly the version number (for example `1.0.1`, no `v`) with `main.js`, `manifest.json` and `styles.css` attached. BRAT picks it up from there.
+To release a new version: bump `version` in `manifest.json` and add it to `versions.json`, run `./build.sh`, and commit. Then on GitHub open **Actions → Release → Run workflow**. It checks the version is new, confirms `main.js` matches the source, and publishes a release tagged with the version (for example `1.1.1`) with `main.js`, `manifest.json` and `styles.css` attached. BRAT picks it up from there.
