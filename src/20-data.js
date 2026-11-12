@@ -40,6 +40,7 @@ function normalizeData(raw) {
     return out;
   });
   d.policies.forEach((p) => { if (!Array.isArray(p.petIds)) p.petIds = []; if (!p.split) p.split = 'equal'; if (!p.shares) p.shares = {}; });
+  if (!d.whatIf || !Array.isArray(d.whatIf.scenarios)) d.whatIf = { scenarios: [], selected: 'base', horizon: '12m' };
   if (!d.pets.length) d.pets.push(newPet(''));
   if (!d.pets.find((p) => p.id === d.activePetId)) d.activePetId = d.pets[0].id;
   return d;

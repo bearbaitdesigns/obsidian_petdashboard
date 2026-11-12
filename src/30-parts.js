@@ -29,7 +29,7 @@ function lineChartSVG(o) {
     const d = se.points.map((p, i) => `${i ? 'L' : 'M'}${X(p.x).toFixed(1)},${Y(p.y).toFixed(1)}`).join('');
     if (se.area) s += `<path d="${d}L${X(se.points[se.points.length - 1].x).toFixed(1)},${Y(ymin)}L${X(se.points[0].x).toFixed(1)},${Y(ymin)}Z" fill="${se.color}" fill-opacity="0.12"/>`;
     s += `<path d="${d}" fill="none" stroke="${se.color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"${se.dash ? ' stroke-dasharray="5 4"' : ''}/>`;
-    if (se.points.length <= 40) se.points.forEach((p) => { s += `<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="2.6" fill="${se.color}">${o.hover ? '' : `<title>${esc(p.title || f(p.y))}</title>`}</circle>`; });
+    if (!se.noDots && se.points.length <= 40) se.points.forEach((p) => { s += `<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="2.6" fill="${se.color}">${o.hover ? '' : `<title>${esc(p.title || f(p.y))}</title>`}</circle>`; });
   });
   return s + '</svg>';
 }
@@ -157,6 +157,7 @@ class FormModal extends Modal {
     options.forEach((op) => { const [val, txt] = Array.isArray(op) ? op : [op, op]; i.append(h('option', { value: val, text: txt })); });
     i.value = options.some((o) => (Array.isArray(o) ? o[0] : o) === cur) ? cur : ''; this.vals[key] = i.value;
   }
+  setLabel(key, text) { const i = this.inputs[key]; const row = i && i.closest ? i.closest('.pd-form-row') : null; const l = row && row.querySelector('label'); if (l) l.textContent = text; }
   showRow(key, show) { const i = this.inputs[key]; const row = i && (i.closest ? i.closest('.pd-form-row') : null); if (row) row.style.display = show ? '' : 'none'; }
   onOpen() {
     const { contentEl, o } = this;

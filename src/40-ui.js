@@ -298,7 +298,7 @@ class DashboardUI {
     period.value = s.analysisPeriod;
     period.addEventListener('change', async () => { s.analysisPeriod = period.value; await this.save(); });
     body.append(h('div', { class: 'pd-page-head' }, h('h2', { text: 'Insurance' }),
-      h('div', { class: 'pd-actions' }, period, btn('What if…', () => new WhatIfModal(this.app, this.plugin, this.pet, this.insScope).open(), { icon: 'flask-conical', title: 'Simulate events: claims paid or denied, a big bill, premium changes, cancelling, a different plan' }), this.pdfButton('insurance'),
+      h('div', { class: 'pd-actions' }, period, btn(wiStore(this.data).scenarios.length ? `What if… (${wiStore(this.data).scenarios.length})` : 'What if…', () => new WhatIfModal(this.app, this.plugin, this.pet, this.insScope).open(), { icon: 'flask-conical', cls: 'mod-cta pd-whatif-btn', title: 'What-if planner: test claims paid or denied, new bills, premium changes, cancelling, or a different plan' }), this.pdfButton('insurance'),
         btn('', () => new InsuranceHelpModal(this.app, this.plugin).open(), { icon: 'help-circle', cls: 'pd-help-btn', title: 'How this works and settings' }))));
 
     if (shared.length) {

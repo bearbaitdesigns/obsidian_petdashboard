@@ -147,6 +147,7 @@ class PetDashboardPlugin extends Plugin {
     this.addCommand({ id: 'open-health', name: 'Open health', callback: () => this.activate('health') });
     this.addCommand({ id: 'pdf-health', name: 'Create health report PDF', callback: () => new ReportModal(this.app, this, this.activePet(), 'health').open() });
     this.addCommand({ id: 'pdf-insurance', name: 'Create insurance summary PDF', callback: () => new ReportModal(this.app, this, this.activePet(), 'insurance').open() });
+    this.addCommand({ id: 'what-if', name: 'Insurance: What-if planner', callback: () => new WhatIfModal(this.app, this, this.activePet(), null).open() });
     this.addCommand({ id: 'add-visit', name: 'Add vet visit', callback: () => this.quick((ui) => ui.edit(ui.pet, 'visits', visitFields(this.data.settings), 'vet visit', null)) });
     this.addCommand({ id: 'add-observation', name: 'Add observation', callback: () => this.quick((ui) => ui.edit(ui.pet, 'observations', obsFields(), 'observation', null, null, { date: todayISO() })) });
     this.addCommand({ id: 'add-claim', name: 'Add insurance claim', callback: () => this.quick((ui) => ui.editClaim()) });
