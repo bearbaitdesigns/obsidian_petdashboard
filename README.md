@@ -2,6 +2,8 @@
 
 Track vet visits, medications, vaccines, weight and observations for each of your pets, and see whether pet insurance (including multi-pet plans) is worth what it costs. Creates PDF reports.
 
+**New here?** Read the [user guide (PDF)](docs/Pet-Dashboard-User-Guide.pdf): setting up pets and insurance, recording visits and claims, updating information, and a routine for keeping each dashboard up to date.
+
 ## Install with BRAT
 
 1. In Obsidian, install **BRAT** from **Settings → Community plugins → Browse** (search "BRAT") and enable it.
